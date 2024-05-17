@@ -46,24 +46,22 @@ class PeersController extends Controller
      */
     public function store($id, Request $request)
     {
-
         $matchThese = ['uuid' => $id];
-        $existingPeer = Peers::find($matchThese)->first();
-    
+        $existingPeer = Peers::where($matchThese)->first();
+
         if ($existingPeer) {
-            // Update field lain jika UUID sudah ada
+            // Update fields if UUID already exists
             $existingPeer->update([
                 'nama' => $request->nama,
                 'peerid' => $request->peerid
             ]);
-    
+
             return response()->json([
                 'success' => true,
                 'message' => 'Data Peers berhasil diperbarui.',
                 'result' => $existingPeer
             ], 200);
         }
-   
 
         $upsert = Peers::firstOrCreate(
             ['uuid' => $id],
@@ -83,6 +81,7 @@ class PeersController extends Controller
             'message' => 'Data gagal tersimpan.',
         ], 409);
     }
+
 
 
     /**
